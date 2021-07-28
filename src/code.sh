@@ -1,8 +1,8 @@
 #!/bin/bash
 # exomedepth_cnv_analysis_v1.0.0
 
-#!/bin/bash
-#
+# Locally stored Docker image to use
+DOCKERIMAGEFILE=/home/dnanexus/seglh_exomedepth.tgz
 
 # The following line causes bash to exit at any point if there is any error
 # and to output each line as it is executed -- useful for debugging
@@ -58,8 +58,7 @@ bam_list="$(ls /home/dnanexus/to_test/*bam | tr '\n' ' ')"
 echo "bam list = " $bam_list
 
 
-echo $ED_docker
-#count the files. make sure there are at least 3 samples for this pan number, else stop
+# count the files. make sure there are at least 3 samples for this pan number, else stop
 filecount="$(ls *001.ba* | grep . -c)"
 if (( $filecount < 6 )); then
 	echo "LESS THAN THREE BAM FILES FOUND FOR THIS ANALYSIS" 1>&2
@@ -70,17 +69,22 @@ fi
 cd ..
 
 mark-section "setting up Exomedepth docker image"
-# docker load
-#docker load -i $ED_docker
+# load/import locally stored docker image
+docker load -i ${DOCKERIMAGEFILE}
+# get full tag of imported image
+DOCKERIMAGENAME=`tar xfO ${DOCKERIMAGEFILE} manifest.json | sed -E 's/.*"RepoTags":\["?([^"]*)"?.*/\1/'`
+echo "Using image:"${DOCKERIMAGENAME}
 
 mark-section "Run CNV analysis using docker image"
 # docker run - mount the home directory as a share
 # Write log direct into output folder
-#Get read count for all samples
-docker load -i '/home/dnanexus/seglh_exomedepth.tgz'
-docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:5f792cb readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/"$bedfile_prefix"_readCount.RData $reference_genome_path $bedfile_path $bam_list $normals_RData_path
-#Run command below to create panel of normals
-#docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:5f792cb readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/normals.RData $reference_genome_path $bedfile_path $bam_list
+# Get read count for all samples
+
+# Run ReadCount script in docker container
+docker run -v /home/dnanexus:/home/dnanexus ${DOCKERIMAGENAME} readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/"$bedfile_prefix"_readCount.RData $reference_genome_path $bedfile_path $bam_list $normals_RData_path
+
+# Run command below to create panel of normals
+#docker run -v /home/dnanexus:/home/dnanexus ${DOCKERIMAGENAME} readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/normals.RData $reference_genome_path $bedfile_path $bam_list
 
 # Upload results
 dx-upload-all-outputs
