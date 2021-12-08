@@ -82,11 +82,8 @@ mark-section "Run CNV analysis using docker image"
 
 # Run ReadCount script in docker container
 docker run -v /home/dnanexus:/home/dnanexus ${DOCKERIMAGENAME} readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/"$bedfile_prefix"_readCount.RData $reference_genome_path $bedfile_path $bam_list $normals_RData_path
-
 # Run command below to create panel of normals
 #docker run -v /home/dnanexus:/home/dnanexus ${DOCKERIMAGENAME} readCount.R /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/normals.RData $reference_genome_path $bedfile_path $bam_list
 
 # Upload results
 dx-upload-all-outputs
-
-
