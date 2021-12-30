@@ -6,7 +6,7 @@ This app runs the read count calculation stage.
 
 Using the provided DNANexus project and the list of Pan numbers the app downloads BAMs and BAI.
 
-A Docker image containing Exome depth is downloaded from 001 - In this release [#1220d31](https://github.com/moka-guys/seglh-cnv/commit/1220d31e2eed1d4488eb461e70615a0fad8b5eb1#diff-3325e16df2216827f90fb6abf51b58e8dbc54d67e5bda4bb2f880b38c5ba48f3) is used. #TODO make this a release
+A Docker image containing Exome depth is downloaded from 001 - In this release [#1220d31](https://github.com/moka-guys/seglh-cnv/tree/1220d31e2eed1d4488eb461e70615a0fad8b5eb1) is used. #TODO make this a release
 
 The `readCount.R` script is then called, producing a readcount file (`PanXXXXexomedepth_readCount.RData`) which can be used as an input for the ED_cnv_calling app https://github.com/moka-guys/dnanexus_ED_cnv_calling
 
