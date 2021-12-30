@@ -12,10 +12,23 @@
     },
     {
       "name": "reference_genome",
-      "label": "fasta file",
+      "label": "reference fasta file",
       "help": "reference_genome",
       "class": "file",
-      "patterns": ["*.fa"],
+      "patterns": ["*.fa","*.fa.gz"],
+      "suggestions": [
+        {
+          "name": "hs37d5.fa.gz",
+          "value": 
+            {
+              "$dnanexus_link": 
+              {
+                "project": "project-ByfFPz00jy1fk6PjpZ95F27J",
+                "id": "file-B6ZY7VG2J35Vfvpkj8y0KZ01"
+              }
+            }
+        }
+      ],
       "optional": false
     },
     {
