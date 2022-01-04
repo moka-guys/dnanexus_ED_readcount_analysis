@@ -62,12 +62,12 @@ do
 	fi
 done
 
-# Get list of all BAMs in to_test  and remove any newlines
+# Get list of all BAMs in to_test
 # NB (include full filepath to ensure the output are absolute paths (needed for docker run))
-bam_list="$(ls /home/dnanexus/to_test/*bam | tr '\n' ' ')"
+bam_list=(/home/dnanexus/to_test/*bam)
 
 # count the BAM files. make sure there are at least 3 samples for this pan number, else stop
-filecount="$(ls $bam_list | grep . -c)"
+filecount="${#bam_list[@]}"
 if (( $filecount < 3 )); then
 	echo "LESS THAN THREE BAM FILES FOUND FOR THIS ANALYSIS" 1>&2
 	exit 1
@@ -97,7 +97,7 @@ mark-section "Calculate read depths using docker image"
 
 
 # Run ReadCount script in docker container
-docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:1220d31 readCount.R $output_RData_file $reference_fasta $bedfile_path $bam_list $normals_RData_path
+docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:1220d31 readCount.R $output_RData_file $reference_fasta $bedfile_path ${bam_list[@]} $normals_RData_path
 
 # Upload results
 dx-upload-all-outputs
