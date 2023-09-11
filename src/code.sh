@@ -1,5 +1,5 @@
 #!/bin/bash
-# exomedepth_cnv_analysis_v1.0.0
+# exomedepth_cnv_analysis_v1.1.0
 
 # The following line causes bash to exit at any point if there is any error
 # and to output each line as it is executed -- useful for debugging
@@ -34,17 +34,12 @@ elif [[ $reference_genome_name == *.fa ]]
 fi 
 
 mark-section "determine run specific variables"
-#Extract samplename to name output files
-samplename=$(python -c "basename='$bedfile_prefix'; print basename.split('_R1')[0]")
-echo $samplename
 echo "read_depth_bed="$bedfile
 echo "reference_genome="$reference_fasta
 echo "panel="$bamfile_pannumbers
 echo "bedfile_prefix="$bedfile_prefix
-echo "normals_RData="$normal_RData
+echo "normals_RData="$normals_RData
 output_RData_file="/home/dnanexus/out/exomedepth_output/exomedepth_output/${bedfile_prefix}/${bedfile_prefix}_readCount.RData"
-echo "output RData file="$output_RData_file
-
 
 mark-section "Download all relevant BAMs"
 # make and cd to test dir
@@ -58,7 +53,7 @@ do
 	if (( $(dx ls $project_name:output/*001.ba* --auth $API_KEY | grep $panel -c) > 0 ));
 	then
 		#download all the BAM and BAI files for this project/pan number
-		dx download $project_name:output/*$panel*001.ba* --auth $API_KEY
+		dx download -f $project_name:output/*$panel*001.ba* --auth $API_KEY
 	fi
 done
 
@@ -78,12 +73,11 @@ cd /home/dnanexus
 
 mark-section "setting up Exomedepth docker image"
 # Location of the ExomeDepth docker file
-docker_file=project-ByfFPz00jy1fk6PjpZ95F27J:file-G6kfZYQ0jy1vZ0BF33KZpQjJ
+docker_file=project-ByfFPz00jy1fk6PjpZ95F27J:file-GYzKz400jy1yx101F34p8qj2
 # download the docker file from 001_Tools...
 dx download $docker_file --auth "${API_KEY}"
-docker load -i '/home/dnanexus/seglh_exomedepth_1220d31.tgz'
-
-
+docker load -i '/home/dnanexus/seglh_exomedepth_87fa493.tgz'
+#docker pull seglh/exomedepth:1111b6c
 mark-section "Calculate read depths using docker image"
 # docker run - mount the home directory as a share
 # call the readCount.R script
@@ -95,9 +89,8 @@ mark-section "Calculate read depths using docker image"
 #	- normals_RData_path
 # The log (PanXXXXexomedepth_readCount.csv) written to same location as the $output_RData_file
 
-
 # Run ReadCount script in docker container
-docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:1220d31 readCount.R $output_RData_file $reference_fasta $bedfile_path ${bam_list[@]} $normals_RData_path
+docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:87fa493 readCount.R $output_RData_file $reference_fasta $bedfile_path ${bam_list[@]} $normals_RData_path
 
 # Upload results
 dx-upload-all-outputs
