@@ -1,7 +1,10 @@
 {
-  "name": "ED_readcount_analysis_v1.0.0",
-  "title": "ED_readcount_analysis_v1.0.0",
-  "summary": "v1.0.0 - Step 1 of CNV calling using ExomeDepth",
+  "name": "ED_readcount_analysis_v1.2.0",
+  "title": "ED_readcount_analysis_v1.2.0",
+  "summary": "v1.2.0 - Step 1 of CNV calling using ExomeDepth",
+  "properties": {
+    "github release": "v1.2.0"
+  },
   "dxapi": "1.0.0",
   "inputSpec": [
     {
@@ -15,21 +18,20 @@
       "label": "reference fasta file",
       "help": "reference_genome",
       "class": "file",
-      "patterns": ["*.fa","*.fa.gz"],
+      "patterns": ["*.fa", "*.fa.gz"],
+      "optional": false,
       "suggestions": [
         {
           "name": "hs37d5.fa.gz",
-          "value": 
-            {
-              "$dnanexus_link": 
-              {
-                "project": "project-ByfFPz00jy1fk6PjpZ95F27J",
-                "id": "file-B6ZY7VG2J35Vfvpkj8y0KZ01"
-              }
+          "value": {
+            "$dnanexus_link": {
+              "project": "project-ByfFPz00jy1fk6PjpZ95F27J",
+              "id": "file-B6ZY7VG2J35Vfvpkj8y0KZ01"
             }
+          },
+          "region": "aws:us-east-1"
         }
-      ],
-      "optional": false
+      ]
     },
     {
       "name": "bamfile_pannumbers",
@@ -56,10 +58,16 @@
   ],
   "outputSpec": [
     {
-      "name": "exomedepth_output",
-      "label": "exomedepth output",
-      "help": "PDF output from ExomeDepth.",
-      "class": "array:file"
+      "name": "csv",
+      "label": "exomedepth CSV file",
+      "help": "CSV file containing CNVs",
+      "class": "file"
+    },
+    {
+      "name": "RData",
+      "label": "exomedepth RData file",
+      "help": "Readcount file",
+      "class": "file"
     }
   ],
   "runSpec": {
@@ -69,9 +77,10 @@
         "hours": 48
       }
     },
+    "headJobOnDemand": false,
     "distribution": "Ubuntu",
-    "release": "16.04",
-    "version": "1",
+    "release": "20.04",
+    "version": "0",
     "file": "src/code.sh"
   },
   "access": {
