@@ -1,7 +1,7 @@
-# dnanexus_ED_readcount_analysis_v1.1.0
+# dnanexus_ED_readcount_analysis_v1.2.0
 Exome depth is run in two stages. Firstly, read counts are calculated, before CNVs are called using the read counts. Read counts are calculated over the entire genome whereas the CNV calling can be performed using a subpanel.
 
-dnanexus_ED_readcount_analysis_v1.1.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
+dnanexus_ED_readcount_analysis_v1.2.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
 
 # What does the app do?
 This app runs the read count calculation stage.

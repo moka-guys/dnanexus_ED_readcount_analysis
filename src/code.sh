@@ -1,5 +1,5 @@
 #!/bin/bash
-# exomedepth_cnv_analysis_v1.1.0
+# exomedepth_cnv_analysis_v1.2.0
 
 # The following line causes bash to exit at any point if there is any error
 # and to output each line as it is executed -- useful for debugging
@@ -10,10 +10,16 @@ set -e -x -o pipefail
 run=${project_name##*_}
 
 #read the DNA Nexus api key as a variable
-API_KEY=$(dx cat project-FQqXfYQ0Z0gqx7XG9Z2b4K43:mokaguys_nexus_auth_key)
+API_KEY_wquotes=$(echo $DX_SECURITY_CONTEXT |  jq '.auth_token')
+API_KEY=$(echo "$API_KEY_wquotes" | sed 's/"//g')
+echo "$API_KEY"
+
+output_RData_dir="/home/dnanexus/out/RData/exomedepth_output/${bedfile_prefix}"
+output_RData_file="${output_RData_dir}/${bedfile_prefix}_readCount.RData"
+output_CSV_dir="/home/dnanexus/out/csv/exomedepth_output/${bedfile_prefix}/"
 
 # make output dir and folder to hold downloaded files
-mkdir -p /home/dnanexus/out/exomedepth_output/exomedepth_output/$bedfile_prefix/ /home/dnanexus/to_test
+mkdir -p /home/dnanexus/to_test $output_CSV_dir $output_RData_dir
 
 mark-section "Downloading inputs"
 # download all inputs
@@ -39,7 +45,7 @@ echo "reference_genome="$reference_fasta
 echo "panel="$bamfile_pannumbers
 echo "bedfile_prefix="$bedfile_prefix
 echo "normals_RData="$normals_RData
-output_RData_file="/home/dnanexus/out/exomedepth_output/exomedepth_output/${bedfile_prefix}/${bedfile_prefix}_readCount.RData"
+
 
 mark-section "Download all relevant BAMs"
 # make and cd to test dir
@@ -73,10 +79,12 @@ cd /home/dnanexus
 
 mark-section "setting up Exomedepth docker image"
 # Location of the ExomeDepth docker file
-docker_file=project-ByfFPz00jy1fk6PjpZ95F27J:file-GYzKz400jy1yx101F34p8qj2
+docker_file_id=project-ByfFPz00jy1fk6PjpZ95F27J:file-GYzKz400jy1yx101F34p8qj2
 # download the docker file from 001_Tools...
-dx download $docker_file --auth "${API_KEY}"
-docker load -i '/home/dnanexus/seglh_exomedepth_87fa493.tgz'
+dx download $docker_file_id --auth "${API_KEY}"
+docker_file=$(dx describe ${docker_file_id} --name)
+DOCKERIMAGENAME=`tar xfO ${docker_file} manifest.json | sed -E 's/.*"RepoTags":\["?([^"]*)"?.*/\1/'`
+docker load < /home/dnanexus/"${docker_file}"
 #docker pull seglh/exomedepth:1111b6c
 mark-section "Calculate read depths using docker image"
 # docker run - mount the home directory as a share
@@ -90,7 +98,10 @@ mark-section "Calculate read depths using docker image"
 # The log (PanXXXXexomedepth_readCount.csv) written to same location as the $output_RData_file
 
 # Run ReadCount script in docker container
-docker run -v /home/dnanexus:/home/dnanexus seglh/exomedepth:87fa493 readCount.R $output_RData_file $reference_fasta $bedfile_path ${bam_list[@]} $normals_RData_path
+docker run -v /home/dnanexus:/home/dnanexus ${DOCKERIMAGENAME} readCount.R $output_RData_file $reference_fasta $bedfile_path ${bam_list[@]} $normals_RData_path
+
+# Move outputs into output folders to delocalise into dnanexus project
+mv $output_RData_dir/*.csv $output_CSV_dir
 
 # Upload results
 dx-upload-all-outputs
