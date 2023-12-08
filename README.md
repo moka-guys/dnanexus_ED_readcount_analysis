@@ -1,14 +1,14 @@
-# dnanexus_ED_readcount_analysis_v1.2.0
+# dnanexus_ED_readcount_analysis_v1.3.0
 Exome depth is run in two stages. Firstly, read counts are calculated, before CNVs are called using the read counts. Read counts are calculated over the entire genome whereas the CNV calling can be performed using a subpanel.
 
-dnanexus_ED_readcount_analysis_v1.2.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
+dnanexus_ED_readcount_analysis_v1.3.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
 
 # What does the app do?
 This app runs the read count calculation stage.
 
 Using the provided DNANexus project and the list of Pan numbers the app downloads BAMs and BAI.
 
-A Docker image containing Exome depth is downloaded from 001 - The Exomedepth image taken from https://github.com/moka-guys/seglh-cnv/releases/tag/v2.0.0
+A Docker image containing Exome depth is downloaded from 001 - The Exomedepth image taken from https://github.com/moka-guys/seglh-cnv/releases/tag/v2.1.0
 
 The `readCount.R` script is then called, producing a readcount file (`PanXXXXexomedepth_readCount.RData`) which can be used as an input for the ED_cnv_calling app https://github.com/moka-guys/dnanexus_ED_cnv_calling
 
