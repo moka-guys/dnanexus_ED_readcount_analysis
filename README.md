@@ -19,7 +19,7 @@ If the panel of normals is not provided then intrabatch normalisation is perform
 * List of comma seperated pan numbers
 * Bedfile covering the capture region
 * Optional: panel of normals
-* Optional: list of excluded samples (list of comma seperated sample name(s) in wildcard. e.g. \*NGS629_17_336408\*,\*NGS629_04_336112\*)
+* Optional: list of excluded samples (list of comma seperated sample name(s). e.g. NGS629_17_336408,NGS629_04_336112)
 
 # Output
 readCount.RData - Read count data and selected references per sample
@@ -34,7 +34,7 @@ dx run applet-GpyBKj00ybJ4pzvJJgZ3pKb4 \
 -ireference_genome=project-ByfFPz00jy1fk6PjpZ95F27J:file-B6ZY7VG2J35Vfvpkj8y0KZ01 \
 -ibedfile=project-ByfFPz00jy1fk6PjpZ95F27J:file-GZZXB6j0jy1j9vgYk767BfFQ \
 -inormals_RData=project-ByfFPz00jy1fk6PjpZ95F27J:file-Gbkgyq00ZpxpFKx03zVPJ9GX \
--iexcluded_samples=*NGS629_17_336408*,*NGS629_04_336112*
+-iexcluded_samples=NGS629_17_336408,NGS629_04_336112
 
 ```
 

@@ -73,7 +73,7 @@ then
     IFS=',' read -ra excluded_samples_array <<<  $excluded_samples
     for del in "${excluded_samples_array[@]}"; do
         for i in "${!bam_list[@]}"; do
-            if [[ ${bam_list[i]} = $del ]]; then
+            if [[ ${bam_list[i]} = *$del* ]]; then
                 unset 'bam_list[i]'
             fi
         done
