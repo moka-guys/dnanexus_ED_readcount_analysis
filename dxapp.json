@@ -60,7 +60,7 @@
       "label": "excluded samples",
       "class": "string",
       "optional": true,
-      "help": "comma separated sample(s) to be excluded"
+      "help": "comma separated sample name(s) to be excluded"
     }
   ],
   "outputSpec": [
