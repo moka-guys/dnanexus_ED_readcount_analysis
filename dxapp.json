@@ -1,9 +1,9 @@
 {
-  "name": "ED_readcount_analysis_v1.3.0",
-  "title": "ED_readcount_analysis_v1.3.0",
-  "summary": "v1.3.0 - Step 1 of CNV calling using ExomeDepth",
+  "name": "ED_readcount_analysis_v1.3.1",
+  "title": "ED_readcount_analysis_v1.3.1",
+  "summary": "v1.3.1 - Step 1 of CNV calling using ExomeDepth",
   "properties": {
-    "github release": "v1.3.0"
+    "github release": "v1.3.1"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -54,6 +54,13 @@
       "class": "file",
       "patterns": ["*.RData"],
       "optional": true
+    },
+    {
+      "name": "excluded_samples",
+      "label": "excluded samples",
+      "class": "string",
+      "optional": true,
+      "help": "comma separated sample name(s) to be excluded"
     }
   ],
   "outputSpec": [

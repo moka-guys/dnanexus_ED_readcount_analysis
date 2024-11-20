@@ -67,6 +67,19 @@ done
 # NB (include full filepath to ensure the output are absolute paths (needed for docker run))
 bam_list=(/home/dnanexus/to_test/*bam)
 
+# remove the bam(s) from the list if excluded_samples is provided 
+if [ "$excluded_samples" ]
+then
+    IFS=',' read -ra excluded_samples_array <<<  $excluded_samples
+    for del in "${excluded_samples_array[@]}"; do
+        for i in "${!bam_list[@]}"; do
+            if [[ ${bam_list[i]} = *$del* ]]; then
+                unset 'bam_list[i]'
+            fi
+        done
+    done
+fi
+
 # count the BAM files. make sure there are at least 3 samples for this pan number, else stop
 filecount="${#bam_list[@]}"
 if (( $filecount < 3 )); then
