@@ -1,7 +1,7 @@
-# dnanexus_ED_readcount_analysis_v1.4.0
+# dnanexus_ED_readcount_analysis_v1.5.0
 Exome depth is run in two stages. Firstly, read counts are calculated, before CNVs are called using the read counts. Read counts are calculated over the entire genome whereas the CNV calling can be performed using a subpanel.
 
-dnanexus_ED_readcount_analysis_v1.4.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
+dnanexus_ED_readcount_analysis_v1.5.0 calculates readcounts for samples using panel of normals and intrabatch samples as reference.
 
 # What does the app do?
 This app runs the read count calculation stage.
@@ -18,6 +18,7 @@ If the panel of normals is not provided then intrabatch normalisation is perform
 * Reference_genome (*.fa.gz or *.fa) in build 37
 * List of comma seperated pan numbers
 * Bedfile covering the capture region
+* Str to search bam files to download (e.g. \*001.ba* or \*markdup.ba*)
 * Optional: panel of normals
 * Optional: list of excluded samples (list of comma seperated sample name(s). e.g. NGS629_01_xxxxxx_NA12878_U_VCP2R208ViaGP08_Pan4149_S1,NGS629_02_xxxxxx_NA12878_U_VCP2R208ViaGP08_Pan4149_S2)
 
@@ -34,6 +35,7 @@ dx run applet-GpyBKj00ybJ4pzvJJgZ3pKb4 \
 -ireference_genome=project-ByfFPz00jy1fk6PjpZ95F27J:file-B6ZY7VG2J35Vfvpkj8y0KZ01 \
 -ibedfile=project-ByfFPz00jy1fk6PjpZ95F27J:file-GZZXB6j0jy1j9vgYk767BfFQ \
 -inormals_RData=project-ByfFPz00jy1fk6PjpZ95F27J:file-Gbkgyq00ZpxpFKx03zVPJ9GX \
+-ibam_str="*markdup.ba*"
 -iexcluded_samples=NGS629_01_xxxxxx_NA12878_U_VCP2R208ViaGP08_Pan4149_S1,NGS629_02_xxxxxx_NA12878_U_VCP2R208ViaGP08_Pan4149_S2
 
 ```
